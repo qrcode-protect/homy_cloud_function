@@ -34,3 +34,23 @@ exports.openEtablissement = functions.pubsub.schedule('00,15,30,45 * * * *').onR
     
 
 })
+
+exports.checkPhoneNumber = functions.https.onCall(async (data, context) => {
+    const phone = data.phone;
+    let user;
+    try {
+        user = await admin.auth().getUserByPhoneNumber(phone);
+    } catch (error) {
+        if (error.code == 'auth/user-not-found') {
+            user = null;
+        } else {
+            throw error;
+        }
+    }
+
+    if (!user) {
+        return false;
+    } else {
+        return true;
+    }
+})  

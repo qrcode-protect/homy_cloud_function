@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "homy-883de"
-  }
+    "default": "homy-883de",
+    "prod": "app-sweetch"
+  },
+  "targets": {}
 }
