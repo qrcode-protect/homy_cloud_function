@@ -1,7 +1,6 @@
 const functions = require("firebase-functions");
 const admin = require('firebase-admin');
 const moment = require('moment-timezone');
-const { ref } = require("firebase-functions/v1/database");
 const { firestore } = require("firebase-admin");
 
 if (admin.apps.length === 0) {
@@ -91,13 +90,15 @@ exports.onCommandeUpdated = functions.firestore.document('commandes_restauration
         }
 
         if (!commandeDataBefore.restaurantStatus.annule && commandeData.restaurantStatus.annule) {
-            payloadList.push({
-                token: commandeData.client.token,
-                notification: {
-                    title: 'Commande refusée',
-                    body: 'Le vendeur à refusé votre commande.',
-                }
-            });
+            if (!commandeData.clientAnnule) {
+                payloadList.push({
+                    token: commandeData.client.token,
+                    notification: {
+                        title: 'Commande refusée',
+                        body: 'Le vendeur à refusé votre commande.',
+                    }
+                });
+            }
         }
 
         if (!commandeDataBefore.restaurantStatus.termine && commandeData.restaurantStatus.termine) {
